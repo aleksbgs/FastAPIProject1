@@ -1,12 +1,12 @@
 import os
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
-from fastapi import Depends, HTTPException, Path, APIRouter
-from pydantic import BaseModel, Field
+from fastapi import Depends, HTTPException, APIRouter
+from pydantic import BaseModel
 from starlette import status
 from sqlalchemy.orm import Session
-from database import SessionLocal
-from models import Users
+from ..database import SessionLocal
+from ..models import Users
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm,OAuth2PasswordBearer
 from jose import  jwt
