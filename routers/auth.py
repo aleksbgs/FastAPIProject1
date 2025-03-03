@@ -1,7 +1,7 @@
 import os
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
-from fastapi import APIRouter,Depends,HTTPException
+from fastapi import Depends, HTTPException, Path, APIRouter
 from pydantic import BaseModel, Field
 from starlette import status
 from sqlalchemy.orm import Session
@@ -10,6 +10,7 @@ from models import Users
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm,OAuth2PasswordBearer
 from jose import  jwt
+
 
 
 
@@ -41,6 +42,7 @@ class CreateUserRequest(BaseModel):
     last_name: str
     password: str
     role: str
+    phone_number: str
 
 class Token(BaseModel):
     access_token: str
@@ -84,7 +86,7 @@ async def create_user(db:db_dependency,create_user_request: CreateUserRequest):
                                last_name=create_user_request.last_name,
                                role=create_user_request.role,
                                hashed_password=bcrypt_context.hash(create_user_request.password),
-                               is_active=True)
+                               is_active=True,phone_number=create_user_request.phone_number)
 
      db.add(create_user_model)
      db.commit()
@@ -101,3 +103,8 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm , Depends()], db:
     token = create_access_token(user.username, user.id, user.role, timedelta(minutes=20))
 
     return {'access_token': token, 'token_type': 'bearer'}
+
+
+
+
+
